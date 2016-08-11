@@ -1,0 +1,22 @@
+[package]
+name = "steem_client"
+version = "0.1.0"
+authors = ["ontofractal"]
+
+[features]
+default = ["openssl"]
+ssl = ["openssl"]
+
+[dependencies]
+env_logger = "*"
+hyper = "*"
+serde_json = "*"
+json = "*"
+
+[dependencies.openssl]
+version = "*"
+optional = true
+
+[dependencies.ws]
+version = "*"
+features = ["ssl"]
