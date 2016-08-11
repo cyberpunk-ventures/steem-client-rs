@@ -8,7 +8,7 @@ use std::io::Read;
 // use rustc_serialize::json::Json;
 
 
-pub fn call(api: String, api_method: String, args: Vec<String>) -> String {
+pub fn call(api: String, api_method: String, args: Vec<String>) -> json::JsonValue {
     let client = Client::new();
 
     let data = object!{
@@ -26,7 +26,8 @@ pub fn call(api: String, api_method: String, args: Vec<String>) -> String {
 
     let mut s = String::new();
     res.read_to_string(&mut s).unwrap();
-    s
+    let obj = json::parse(&s).unwrap();
+    obj
 }
 
 
@@ -40,7 +41,8 @@ mod tests {
         let api_method = "get_dynamic_global_properties".to_string();
         let args = vec![];
         let result_str = call(api, api_method, args);
-        println!("{:?}", result_str);
-        assert!(result_str.contains("head_block_number"));
+        let head_block_number = result_str["result"]["head_block_number"].as_fixed_point_u64(0);
+        println!("{:?}", head_block_number);
+        assert!(head_block_number.unwrap() > 3991571);
     }
 }
