@@ -2,7 +2,7 @@ extern crate hyper;
 extern crate serde_json;
 extern crate env_logger;
 
-use hyper::*;
+use hyper::Client;
 use serde_json::Map;
 use std::io::Read;
 use serde_json::builder::{ArrayBuilder, ObjectBuilder};
