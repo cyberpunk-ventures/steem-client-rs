@@ -28,7 +28,7 @@ let result_map: Map<String, serde_json::value::Value> = call(api, api_method, ar
 
 # Roadmap
 
-* Investigate json_rpc crate from eth_core implementation in Ethereum's Parity
+* Investigate [jsonrpc-core](https://github.com/ethcore/jsonrpc-core) crate from eth_core implementation in Ethereum's Parity
 * Utility functions
 * Investigate WS and evented approach
 * Add response structs and types for different JSONRPC apis and methods
