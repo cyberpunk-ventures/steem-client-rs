@@ -1,30 +1,24 @@
 extern crate hyper;
 extern crate rustc_serialize;
+#[macro_use]
+extern crate json;
 
 use hyper::*;
 use std::io::Read;
-use rustc_serialize::{Decodable, Encodable, json};
-use rustc_serialize::json::Json;
+// use rustc_serialize::json::Json;
 
-#[derive(RustcDecodable, RustcEncodable)]
-struct JsonRpcStruct {
-    jsonrpc: String,
-    method: String,
-    params: (String, String, Vec<String>),
-    id: i64,
-}
 
-pub fn call(params: (String, String, Vec<String>)) -> String {
+pub fn call(api: String, api_method: String, args: Vec<String>) -> String {
     let client = Client::new();
 
-    let js_obj = JsonRpcStruct {
-        jsonrpc: "2.0".to_string(),
-        method: "call".to_string(),
-        params: params,
-        id: 1,
+    let data = object!{
+        "jsonrpc" => "2.0",
+        "method" => "call",
+        "id" => 1,
+        "params" => array![api, api_method, args]
     };
 
-    let json = json::encode(&js_obj).unwrap();
+    let json = data.dump();
     let mut res = client.post("http://node.steem.ws/rpc")
         .body(&json)
         .send()
@@ -42,10 +36,11 @@ mod tests {
 
     #[test]
     fn basic_json_rpc_call_works() {
-        let plugin = "database_api".to_string();
-        let method = "get_dynamic_global_properties".to_string();
-        let rpc_call = (plugin, method, vec![]);
-        let result_str = call(rpc_call);
+        let api = "database_api".to_string();
+        let api_method = "get_dynamic_global_properties".to_string();
+        let args = vec![];
+        let result_str = call(api, api_method, args);
+        println!("{:?}", result_str);
         assert!(result_str.contains("head_block_number"));
     }
 }
