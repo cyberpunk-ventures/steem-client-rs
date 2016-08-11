@@ -43,6 +43,6 @@ mod tests {
         let result_str = call(api, api_method, args);
         let head_block_number = result_str["result"]["head_block_number"].as_fixed_point_u64(0);
         println!("{:?}", head_block_number);
-        assert!(head_block_number.unwrap() > 3991571);
+        assert!(head_block_number.unwrap() > 3990000);
     }
 }
