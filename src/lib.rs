@@ -7,10 +7,16 @@ use serde_json::Map;
 use std::io::Read;
 use serde_json::builder::{ArrayBuilder, ObjectBuilder};
 
+#[derive(Debug)]
+pub enum SteemdError {
+    CallFailed,
+}
+
+
 pub fn call(api: String,
             api_method: String,
             args: Vec<String>)
-            -> Map<String, serde_json::value::Value> {
+            -> Result<Map<String, serde_json::value::Value>, SteemdError> {
 
     let params = ArrayBuilder::new()
         .push(api)
@@ -36,7 +42,10 @@ pub fn call(api: String,
     res.read_to_string(&mut s).unwrap();
     let json: Map<String, serde_json::value::Value> = serde_json::from_str(&s).unwrap();
 
-    json
+    match json.contains_key("error") {
+        false => Ok(json),
+        true => Err(SteemdError::CallFailed),
+    }
 }
 
 
@@ -50,7 +59,7 @@ mod tests {
         let api = "database_api".to_string();
         let api_method = "get_dynamic_global_properties".to_string();
         let args = vec![];
-        let result_map = call(api, api_method, args);
+        let result_map = call(api, api_method, args).unwrap();
 
         assert!(result_map.contains_key("id"));
     }
