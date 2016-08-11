@@ -12,11 +12,11 @@ pub enum SteemdError {
     CallFailed,
 }
 
-
 pub fn call(api: String,
             api_method: String,
             args: Vec<String>)
             -> Result<Map<String, serde_json::value::Value>, SteemdError> {
+    const RPC_ENDPOINT: &'static str = "http://node.steem.ws/rpc";
 
     let params = ArrayBuilder::new()
         .push(api)
@@ -33,7 +33,7 @@ pub fn call(api: String,
 
     let client = Client::new();
 
-    let mut res = client.post("http://node.steem.ws/rpc")
+    let mut res = client.post(RPC_ENDPOINT)
         .body(&serde_json::to_string(&value).unwrap())
         .send()
         .unwrap();
@@ -48,14 +48,12 @@ pub fn call(api: String,
     }
 }
 
-
 #[cfg(test)]
 mod tests {
     use super::*;
 
     #[test]
     fn basic_json_rpc_call_works() {
-
         let api = "database_api".to_string();
         let api_method = "get_dynamic_global_properties".to_string();
         let args = vec![];
