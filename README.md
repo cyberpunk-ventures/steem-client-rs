@@ -2,7 +2,7 @@
 
 This is a Steem client library written in Rust language.
 
-Work in progress and under development.
+Work in progress.
 
 # How to use
 
@@ -25,3 +25,11 @@ let args = vec![];
 let result_map: Map<String, serde_json::value::Value> = call(api, api_method, args)
         .unwrap();
 ```
+
+# Roadmap
+
+* Investigate json_rpc crate from eth_core implementation in Ethereum's Parity
+* Utility functions
+* Investigate WS and evented approach
+* Add response structs and types for different JSONRPC apis and methods
+* More tests and docs
