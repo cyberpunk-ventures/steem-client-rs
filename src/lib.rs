@@ -50,14 +50,16 @@ pub fn call(api: String,
 
 #[cfg(test)]
 mod tests {
+    extern crate serde_json;
     use super::*;
-
+    use serde_json::Map;
     #[test]
     fn basic_json_rpc_call_works() {
         let api = "database_api".to_string();
         let api_method = "get_dynamic_global_properties".to_string();
         let args = vec![];
-        let result_map = call(api, api_method, args).unwrap();
+        let result_map: Map<String, serde_json::value::Value> = call(api, api_method, args)
+            .unwrap();
 
         assert!(result_map.contains_key("id"));
     }
