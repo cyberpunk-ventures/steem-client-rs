@@ -52,15 +52,37 @@ pub fn call(api: String,
 mod tests {
     extern crate serde_json;
     use super::*;
-    use serde_json::Map;
-    #[test]
-    fn basic_json_rpc_call_works() {
-        let api = "database_api".to_string();
-        let api_method = "get_dynamic_global_properties".to_string();
-        let args = vec![];
-        let result_map: Map<String, serde_json::value::Value> = call(api, api_method, args)
-            .unwrap();
 
-        assert!(result_map.contains_key("id"));
+    #[cfg(test)]
+    mod tests {
+        extern crate serde_json;
+        use super::*;
+
+        #[test]
+        fn get_dynamic_props_rpc_call_succeeds() {
+            let api = SteemApi::DatabaseApi;
+            let api_method = "get_dynamic_global_properties".to_string();
+            let args = vec![];
+            let response_map = call(api, api_method, args).unwrap();
+            assert!(response_map["result"]["head_block_number"].as_u64().unwrap() > 10000000);
+        }
+
+        #[test]
+        fn get_content_rpc_call_succeeds() {
+            let api = SteemApi::DatabaseApi;
+            let api_method = "get_content".to_string();
+            let args = vec!["ontofractal".to_string(), "ann-introducing-glasnost-alpha-open-source-blog-and-app-server-for-steem-golos-blockchains".to_string()];
+            let response_map = call(api, api_method, args).unwrap();
+            assert!(response_map["result"]["title"].as_str().unwrap() == "[ANN] Introducing Glasnost alpha: open source blog and app server for Steem/Golos blockchains");
+        }
+
+        #[test]
+        fn get_followers_rpc_call_succeeds() {
+            let api = SteemApi::FollowsApi;
+            let api_method = "get_followers".to_string();
+            let args =
+                vec!["ontofractal".to_string(), "".to_string(), "blog".to_string(), "100".to_string() ];
+            let response_map = call(api, api_method, args).unwrap();
+            assert!( !response_map["result"][0]["follower"].as_str().unwrap().is_empty() );
+        }
     }
-}
