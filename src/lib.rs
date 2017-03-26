@@ -8,8 +8,16 @@ use std::io::Read;
 use serde_json::builder::{ArrayBuilder, ObjectBuilder};
 
 #[derive(Debug)]
-pub enum SteemdError {
+pub enum SteemError {
     CallFailed,
+    Http(hyper::Error),
+    JsonParsing(serde_json::Error),
+    ResponseIo(std::io::Error),
+}
+
+pub enum SteemApi {
+    DatabaseApi,
+    FollowsApi,
 }
 
 pub fn call(api: String,
