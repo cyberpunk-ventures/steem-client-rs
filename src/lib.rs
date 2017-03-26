@@ -1,11 +1,11 @@
 extern crate hyper;
+extern crate hyper_openssl;
+
+#[macro_use]
 extern crate serde_json;
 extern crate env_logger;
 
-use hyper::Client;
-use serde_json::Map;
 use std::io::Read;
-use serde_json::builder::{ArrayBuilder, ObjectBuilder};
 
 #[derive(Debug)]
 pub enum SteemError {
