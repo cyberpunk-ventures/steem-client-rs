@@ -16,11 +16,11 @@ Example code
 extern crate steem_client;
 use steem_client::*;
 
-let api = steem_client::GolosApi::DatabaseApi;
+let api = steem_client::SteemApi::DatabaseApi;
 let api_method = "get_dynamic_global_properties".to_string();
 let args = vec![];
 
-let response: Result<serde_json::Value, GolosError> = steem_client::call(api, api_method, args);
+let response: Result<serde_json::Value, SteemError> = steem_client::call(api, api_method, args);
 response["result"]["head_block_number"].as_u64().unwrap() > 10000000; // true
 ```
 
